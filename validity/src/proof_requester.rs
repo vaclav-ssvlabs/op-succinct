@@ -13,7 +13,10 @@ use sp1_sdk::{
     network::{proto::types::ExecutionStatus, FulfillmentStrategy},
     NetworkProver, SP1Proof, SP1ProofMode, SP1ProofWithPublicValues, SP1Stdin, SP1_CIRCUIT_VERSION,
 };
-use std::{sync::Arc, time::Instant, time::Duration};
+use std::{
+    sync::Arc,
+    time::{Duration, Instant},
+};
 use tracing::{info, warn};
 use crate::{
     db::DriverDBClient, OPSuccinctRequest, ProgramConfig, RequestExecutionStatistics,
@@ -279,6 +282,7 @@ impl<H: OPSuccinctHost> OPSuccinctProofRequester<H> {
                 .calculate_gas(true)
                 // .stdout(&mut stdout_bridge)
                 // .stderr(&mut stderr_bridge)
+                .deferred_proof_verification(false)
                 .run()
         })
         .await?

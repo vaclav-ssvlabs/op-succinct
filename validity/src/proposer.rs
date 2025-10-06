@@ -26,7 +26,8 @@ use tracing::{debug, info, warn};
 use crate::{
     db::{DriverDBClient, OPSuccinctRequest, RequestMode, RequestStatus, RequestType},
     find_gaps, get_latest_proposed_block_number, get_ranges_to_prove, CommitmentConfig,
-    ContractConfig, OPSuccinctProofRequester, ProgramConfig, RequesterConfig, ValidityGauge,
+    ContractConfig, OPSuccinctProofRequester, ProgramConfig, RequestExecutionStatistics,
+    RequesterConfig, ValidityGauge,
 };
 use crate::publisher::{build_aggregation_outputs, submit_to_publisher};
 use op_succinct_client_utils::boot::MailboxInfoStruct;
@@ -277,7 +278,7 @@ where
 
             // Log details for each created range proof request.
             for request in &new_range_requests {
-                info!(
+                debug!(
                     start_block = request.start_block,
                     end_block = request.end_block,
                     "Range proof request created and inserted into database"
@@ -315,11 +316,9 @@ where
     #[tracing::instrument(name = "proposer.process_proof_request_status", skip(self, request))]
     pub async fn process_proof_request_status(&self, request: OPSuccinctRequest) -> Result<()> {
         if let Some(proof_request_id) = request.proof_request_id.as_ref() {
-            let (status, proof) = self
-                .driver_config
-                .network_prover
-                .get_proof_status(B256::from_slice(proof_request_id))
-                .await?;
+            let proof_request_id = B256::from_slice(proof_request_id);
+            let (status, proof) =
+                self.driver_config.network_prover.get_proof_status(proof_request_id).await?;
 
             // Check if current time exceeds deadline. If so, the proof has timed out.
             let current_time = std::time::SystemTime::now()
@@ -388,6 +387,22 @@ where
                     .await?;
                 // Update the prove_duration based on the current time and the proof_request_time.
                 self.driver_config.driver_db_client.update_prove_duration(request.id).await?;
+
+                if let Some(proof_request) =
+                    self.driver_config.network_prover.get_proof_request(proof_request_id).await?
+                {
+                    let execution_statistics = RequestExecutionStatistics::from(&proof_request);
+
+                    // Write the execution data to the database.
+                    self.driver_config
+                        .driver_db_client
+                        .insert_execution_statistics(
+                            request.id,
+                            serde_json::to_value(execution_statistics)?,
+                            0,
+                        )
+                        .await?;
+                }
 
                 // Log completion of range and aggregation proofs.
                 match request.req_type {
@@ -603,7 +618,7 @@ where
                 self.requester_config.l2_chain_id,
                 checkpointed_l1_block_number,
                 checkpointed_l1_block_hash,
-                self.requester_config.prover_address,
+                self.driver_config.signer.address(),
             );
 
             self.driver_config.driver_db_client.insert_request(&agg_request).await?;
@@ -956,6 +971,46 @@ where
             let proof = completed_agg_proof.proof.as_ref()
                 .expect("No proof available for deserialization");
 
+
+            /*
+            let transaction_request = self
+                .contract_config
+                .l2oo_contract
+                .dgfProposeL2Output(
+                    self.requester_config.op_succinct_config_name_hash,
+                    output.output_root,
+                    U256::from(completed_agg_proof.end_block),
+                    U256::from(completed_agg_proof.checkpointed_l1_block_number.unwrap()),
+                    completed_agg_proof.proof.as_ref().unwrap().clone().into(),
+                    self.driver_config.signer.address(),
+                )
+                .value(init_bond)
+                .into_transaction_request();
+
+            self.driver_config
+                .signer
+                .send_transaction_request(
+                    self.driver_config.fetcher.as_ref().rpc_config.l1_rpc.clone(),
+                    transaction_request,
+                )
+                .await?
+            } else {
+                // Propose the L2 output to the L2OutputOracle directly.
+                let transaction_request = self
+                    .contract_config
+                    .l2oo_contract
+                    .proposeL2Output(
+                        self.requester_config.op_succinct_config_name_hash,
+                        output.output_root,
+                        U256::from(completed_agg_proof.end_block),
+                        U256::from(completed_agg_proof.checkpointed_l1_block_number.unwrap()),
+                        completed_agg_proof.proof.clone().unwrap().into(),
+                        self.driver_config.signer.address(),
+                    )
+                    .into_transaction_request();
+            }
+                    */
+
             println!("Relay completed aggregation proof: length={}", proof.len());
 
             // Fetch mailbox data from database
@@ -1023,7 +1078,7 @@ where
                 ),
             }
         }
-        
+
         Ok(B256::ZERO) // Placeholder return value since we're not submitting on-chain
     }
 

@@ -26,6 +26,29 @@ To run my test:
 cd scripts/prove/tests
 RUST_LOG=info cargo test -p op-succinct-prove --test range_ethereum_env -- --nocapture
 ```
+## Development
+
+### Book
+
+Make sure you install the following on your machine:
+
+```bash
+cargo install mdbook
+cargo install mdbook-mermaid
+cargo install mdbook-admonish
+```
+
+Then run the server:
+
+```sh
+mdbook serve --open
+```
+
+### OP Succinct
+
+To configure or change the OP Succinct codebase, please refer to the [OP Succinct Book](https://succinctlabs.github.io/op-succinct).
+
+## Acknowledgments
 
 Logging for the range programs now uses `tracing`. Guest log lines are bridged back into the host logger under the
 `sp1::stdout`/`sp1::stderr` targets, so configure `RUST_LOG` accordingly. Rebuild the zkVM binary with the

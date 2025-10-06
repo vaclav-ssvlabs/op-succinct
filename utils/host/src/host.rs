@@ -34,6 +34,20 @@ impl PreimageServerStarter for SingleChainHost {
 
 
 #[async_trait]
+impl PreimageServerStarter for SingleChainHostWithEigenDA {
+    async fn start_server<C>(
+        &self,
+        hint: C,
+        preimage: C,
+    ) -> Result<JoinHandle<Result<(), SingleChainHostError>>, SingleChainHostError>
+    where
+        C: Channel + Send + Sync + 'static,
+    {
+        self.start_server(hint, preimage).await
+    }
+}
+
+#[async_trait]
 pub trait OPSuccinctHost: Send + Sync + 'static {
     type Args: Send + Sync + 'static + Clone + PreimageServerStarter;
     type WitnessGenerator: WitnessGenerator + Send + Sync;

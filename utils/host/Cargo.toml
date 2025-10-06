@@ -27,6 +27,9 @@ kona-protocol.workspace = true
 kona-rpc.workspace = true
 
 
+# hokulea
+hokulea-host-bin.workspace = true
+
 # alloy
 alloy-consensus.workspace = true
 alloy-contract.workspace = true

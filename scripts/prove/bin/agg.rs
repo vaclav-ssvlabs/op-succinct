@@ -101,6 +101,7 @@ async fn main() -> Result<()> {
             .calculate_gas(true)
             // .stdout(&mut stdout_bridge)
             // .stderr(&mut stderr_bridge)
+            .deferred_proof_verification(false)
             .run()
             .unwrap();
         println!("report: {report:?}");
