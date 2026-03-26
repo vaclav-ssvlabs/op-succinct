@@ -19,8 +19,8 @@ jobs:
     timeout-minutes: 60
 
     steps:
-      - uses: actions/checkout@v4
-      - uses: dtolnay/rust-toolchain@stable
+      - uses: actions/checkout@v6.0.2
+      - uses: dtolnay/rust-toolchain@v1
 
       - name: Install mdbook-linkcheck
         run: cargo install mdbook-linkcheck
@@ -32,9 +32,9 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 60
     steps:
-      - uses: actions/checkout@v4
-      - uses: dtolnay/rust-toolchain@stable
-      - uses: peaceiris/actions-mdbook@v1
+      - uses: actions/checkout@v6.0.2
+      - uses: dtolnay/rust-toolchain@v1
+      - uses: peaceiris/actions-mdbook@v2.0.0
         with:
           mdbook-version: 'latest'
       - name: Install plugins

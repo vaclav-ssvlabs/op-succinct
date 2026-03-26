@@ -24,7 +24,7 @@ jobs:
       with:
         version: nightly
     - run: rustup toolchain install stable --profile minimal
-    - uses: Swatinem/rust-cache@v2  
+    - uses: Swatinem/rust-cache@v2.9.1  
     - name: Install SP1 toolchain
         run: |
           curl -L https://sp1.succinct.xyz | bash
