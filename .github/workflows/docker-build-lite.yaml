@@ -23,15 +23,15 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6.0.2
         with:
           ref: ${{ github.sha }}
 
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
+        uses: docker/setup-buildx-action@v4.0.0
       
       - name: Cache
-        uses: actions/cache@v3
+        uses: actions/cache@v5.0.4
         id: cache
         with:
           path: |
@@ -44,7 +44,7 @@ jobs:
 
       - name: Docker meta for proposer
         id: meta-proposer
-        uses: docker/metadata-action@v5
+        uses: docker/metadata-action@v6.0.0
         with:
           images: ghcr.io/${{ github.repository }}/lite-proposer
           tags: |
@@ -52,14 +52,14 @@ jobs:
             latest
 
       - name: Login to GitHub Container Registry
-        uses: docker/login-action@v3
+        uses: docker/login-action@v4.0.0
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build and push proposer
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@v7.0.0
         with:
           context: .
           file: fault-proof/Dockerfile.proposer
@@ -93,15 +93,15 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6.0.2
         with:
           ref: ${{ github.sha }}
 
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
+        uses: docker/setup-buildx-action@v4.0.0
       
       - name: Cache
-        uses: actions/cache@v3
+        uses: actions/cache@v5.0.4
         id: cache
         with:
           path: |
@@ -114,7 +114,7 @@ jobs:
 
       - name: Docker meta for proposer-celestia
         id: meta-proposer-celestia
-        uses: docker/metadata-action@v5
+        uses: docker/metadata-action@v6.0.0
         with:
           images: ghcr.io/${{ github.repository }}/lite-proposer-celestia
           tags: |
@@ -122,14 +122,14 @@ jobs:
             latest
 
       - name: Login to GitHub Container Registry
-        uses: docker/login-action@v3
+        uses: docker/login-action@v4.0.0
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build and push proposer-celestia
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@v7.0.0
         with:
           context: .
           file: fault-proof/Dockerfile.proposer.celestia
@@ -163,15 +163,15 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6.0.2
         with:
           ref: ${{ github.sha }}
 
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
+        uses: docker/setup-buildx-action@v4.0.0
       
       - name: Cache
-        uses: actions/cache@v3
+        uses: actions/cache@v5.0.4
         id: cache
         with:
           path: |
@@ -184,7 +184,7 @@ jobs:
 
       - name: Docker meta for proposer-eigenda
         id: meta-proposer-eigenda
-        uses: docker/metadata-action@v5
+        uses: docker/metadata-action@v6.0.0
         with:
           images: ghcr.io/${{ github.repository }}/lite-proposer-eigenda
           tags: |
@@ -192,14 +192,14 @@ jobs:
             latest
 
       - name: Login to GitHub Container Registry
-        uses: docker/login-action@v3
+        uses: docker/login-action@v4.0.0
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build and push proposer-eigenda
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@v7.0.0
         with:
           context: .
           file: fault-proof/Dockerfile.proposer.eigenda
@@ -233,15 +233,15 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6.0.2
         with:
           ref: ${{ github.sha }}
 
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
+        uses: docker/setup-buildx-action@v4.0.0
       
       - name: Cache
-        uses: actions/cache@v3
+        uses: actions/cache@v5.0.4
         id: cache
         with:
           path: |
@@ -254,7 +254,7 @@ jobs:
 
       - name: Docker meta for challenger
         id: meta-challenger
-        uses: docker/metadata-action@v5
+        uses: docker/metadata-action@v6.0.0
         with:
           images: ghcr.io/${{ github.repository }}/lite-challenger
           tags: |
@@ -262,14 +262,14 @@ jobs:
             latest
 
       - name: Login to GitHub Container Registry
-        uses: docker/login-action@v3
+        uses: docker/login-action@v4.0.0
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build and push challenger
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@v7.0.0
         with:
           context: .
           file: fault-proof/Dockerfile.challenger

@@ -13,10 +13,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out code.
-        uses: actions/checkout@v1
+        uses: actions/checkout@v6.0.2
       - name: misspell
         id: check_for_typos
-        uses: reviewdog/action-misspell@v1
+        uses: reviewdog/action-misspell@v1.27.0
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           path: "./book"

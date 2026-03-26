@@ -16,11 +16,11 @@ jobs:
       - run-id=${{ github.run_id }} 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v4
+      uses: actions/checkout@v6.0.2
       with:
         submodules: recursive
     - name: Install Foundry
-      uses: foundry-rs/foundry-toolchain@v1
+      uses: foundry-rs/foundry-toolchain@v1.7.0
       with:
         version: nightly
     - run: rustup toolchain install stable --profile minimal

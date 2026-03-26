@@ -33,7 +33,7 @@ jobs:
     
     steps:
     - name: Checkout code
-      uses: actions/checkout@v4
+      uses: actions/checkout@v6.0.2
       with:
         submodules: recursive
       
@@ -43,12 +43,12 @@ jobs:
         rustup component add rustfmt clippy
         
     - name: Install Foundry
-      uses: foundry-rs/foundry-toolchain@v1
+      uses: foundry-rs/foundry-toolchain@v1.7.0
       with:
         version: nightly-d592b3e0f142d694c3be539702704a4a73238773
         
     - name: Cache Rust dependencies
-      uses: Swatinem/rust-cache@v2
+      uses: Swatinem/rust-cache@v2.9.1
       with:
         workspaces: |
           .
@@ -69,7 +69,7 @@ jobs:
         
     - name: Upload test logs on failure
       if: failure()
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7.0.0
       with:
         name: e2e-test-logs
         path: |
